@@ -35,6 +35,11 @@ int main() {
     return 0;
 }
 
+/**
+ * 入力からコマンドを解釈し CMD 構造体を返す
+ * @param input 1行の入力
+ * @return CMD
+ */
 CMD gen_command(char *input) {
     CMD cmd;
     cmd.cmd = strtok(input, " ");
@@ -55,6 +60,11 @@ int cmd(char *cmd, char *argv, ...) {
     return 0;
 }
 
+/**
+ * エラー出力する
+ * @param format フォーマット文字列
+ * @param ... フォーマットに入るパラメタ
+ */
 void error(char *format, ...) {
     va_list args;
     va_start(args, format);
