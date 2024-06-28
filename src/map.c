@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "map.h"
 
 typedef unsigned int uint;
@@ -27,7 +28,7 @@ uint hash(const char *key, const int size) {
     return hash % size;
 }
 
-void h_insert(const HashMap *map, const char *key, const void *value) {
+void h_insert(const HashMap *map, const char *key, void *value) {
     uint index = hash(key, map->size);
 
     Entry *entry = map->entries[index];
@@ -37,7 +38,8 @@ void h_insert(const HashMap *map, const char *key, const void *value) {
         // キーが重複していたら, value を上書きする
         if (strcmp(entry->key, key) == 0) {
             free(entry->value);
-            entry->value = strdup(value);
+            // FIXME: 関数ポインタの場合は複製する
+            entry->value = value;
             return;
         }
         entry = entry->next;
@@ -45,7 +47,8 @@ void h_insert(const HashMap *map, const char *key, const void *value) {
 
     entry = malloc(sizeof(Entry));
     entry->key = strdup(key);
-    entry->value = strdup(value);
+    // FIXME: 関数ポインタの場合は複製する
+    entry->value = value;
     entry->next = map->entries[index];
 
     map->entries[index] = entry;
@@ -60,7 +63,7 @@ void *h_get(const HashMap *map, const char *key) {
     return entry->value;
 }
 
-int h_delete(const HashMap *map, const char *key) {
+int h_delete(const HashMap *map, const char *key, bool free_val) {
     uint index = hash(key, map->size);
     Entry *entry = map->entries[index];
 
@@ -79,13 +82,15 @@ int h_delete(const HashMap *map, const char *key) {
     }
 
     free(entry->key);
-    free(entry->value);
+    if (free_val) {
+        free(entry->value);
+    }
     free(entry);
 
     return 0;
 }
 
-void h_free(HashMap *map) {
+void h_free(HashMap *map, bool free_val) {
     // free entries
     int i = 0;
 
@@ -95,7 +100,9 @@ void h_free(HashMap *map) {
         while (entry != NULL) {
             Entry *next = entry->next;
             free(entry->key);
-            free(entry->value);
+            if (free_val) {
+                free(entry->value);
+            }
             free(entry);
             entry = next;
         }

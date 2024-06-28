@@ -13,7 +13,7 @@ typedef struct {
 } HashMap;
 
 HashMap *h_create(int size);
-void h_insert(const HashMap *map, const char *key, const void *value);
+void h_insert(const HashMap *map, const char *key, void *value);
 void *h_get(const HashMap *map, const char *key);
-int h_delete(const HashMap *map, const char *key);
-void h_free(HashMap *map);
+int h_delete(const HashMap *map, const char *key, bool free_val);
+void h_free(HashMap *map, bool free_val);
