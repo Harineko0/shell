@@ -6,6 +6,8 @@
 #include "cd.h"
 #define CMD_SIZE 100
 
+typedef unsigned long long ull;
+
 static HashMap *map = NULL;
 
 void init_map() {

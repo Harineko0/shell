@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../global.h"
+#include "../lib/io.h"
 
 typedef unsigned long long ull;
 
@@ -17,14 +18,20 @@ int cd(char **argv) {
     }
 
     char start = dir[0];
+    ull dirlen = strlen(dir);
     char *tmp;
 
     // 絶対パス (/**)
     if (start == '/') {
         tmp = dir;
     } else if (start == '~') {
+        if (dirlen > 1 && dir[1] != '/') {
+            error("cd %s: No such file or directory", dir);
+            return 1;
+        }
+
         char *home = "/c/Users/harin"; // TODO: getenv("HOME");
-        tmp = path_resolve(home, dir);
+        tmp = path_resolve(home, dir + 2);
     } else {
         tmp = path_resolve(cwd, dir);
     }
