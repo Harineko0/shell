@@ -1,7 +1,25 @@
 # Programming C Subset Shell
 ## Available Commands
 ### 基本
-* cd  
+* 外部コマンド: execvp (p.46)
+* cd: directory.c (p.44)
+  1. 絶対パスなら cwd を置き換え, 相対パスなら cwd と結合, ~ なら HOME と結合, 引数なしなら HOME に設定して終了  
+    `path.resolve(char *a, char *b)`: a の末尾に / が無かったら / を付けて b と結合
+  2. cwd のパスを正規化 (. や .. を取り除く)
+```
+. = 削除
+.. = 直前のディレクトリを削除
+```
+```
+** := ([a-zA-Z0-9]+)(..)(.)
+
+(nothing) = HOME  
+/** = 絶対パス  
+./** = 
+../** =   
+~/**
+** = ./** と同じ
+```
 * dirs  
 * pushd   
 * popd  
@@ -31,12 +49,14 @@ $
   ヒストリで n 番目にあるコマンドを実行
 * !-n
 * ワイルドカード `*strings` `strings*`
+* シェルスクリプト
 
 ### Extra
 * test コマンド? シェルスクリプト?
 * シェル変数
 * mkdir
 * cat
+* リダイレクト
 
 ## 設計
 1. 標準入力から入力を受け取る
@@ -46,8 +66,9 @@ $
 5. TODO: 0 or 1 の戻り値はどう扱う?
 
 ### 必要な変数
+* current working directory
 * コマンド履歴: 先頭, 末尾, 検索
-  * LinkedList: まずこっちで実装する?
+  * DoublyLinkedList: まずこれのみで実装する
   * Tri 木: !string string から始まるノードを検索し, その子の中から最も最新のノードを取り出す
 * ディレクトリスタック: 一番上に push, pop
 * エイリアスの HashMap
@@ -56,8 +77,5 @@ $
 
 ### ソースコード構成
 * main.c
-* io.c
-* cmd.c
-* his.c
-* dir.c
-* alias.c
+* map.c: HashMap
+* list.c: DoublyLinkedList

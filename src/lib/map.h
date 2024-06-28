@@ -1,4 +1,5 @@
 /* https://zenn.dev/derbuihan/articles/acc5c3d4deab29 */
+#include <stdbool.h>
 
 typedef struct Entry Entry;
 struct Entry {
