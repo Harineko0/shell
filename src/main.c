@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdarg.h>
+#include "cmd.h"
+#include "io.h"
+#include "cd.h"
+#include "map.h"
+
 #define MAX_LEN 256
 #define MAX_ARG 10
-
-typedef struct {
-    char *cmd;
-    char **argv;
-} Command;
-
-int cmd(char *cmd, char *argv, ...);
-Command gen_command(char *input);
-void error(char *format, ...);
 
 int main() {
     char buff[MAX_LEN];
@@ -22,55 +16,20 @@ int main() {
             error("Too long statement (max: %d)", MAX_LEN);
         }
 
-        Command cmd = gen_command(buff);
+        Command cmd = c_interprete(buff, MAX_ARG);
         puts(cmd.cmd);
 
         int i = 0;
         while (cmd.argv[i] != NULL) {
             puts(cmd.argv[i++]);
         }
+
+        c_fun fun = c_get(cmd.cmd);
+        if (fun != NULL) {
+            fun(cmd.argv);
+        }
         break;
     }
 
     return 0;
-}
-
-/**
- * 入力からコマンドを解釈し Command 構造体を返す
- * @param input 1行の入力
- * @return Command
- */
-Command gen_command(char *input) {
-    Command cmd;
-    cmd.cmd = strtok(input, " ");
-
-    cmd.argv = malloc((sizeof (void*)) * MAX_ARG);
-    int i = 0;
-    while ((cmd.argv[i++] = strtok(NULL, " ")) != NULL){
-        if (i >= MAX_ARG) {
-            error("Too many arguments.");
-            break;
-        }
-    }
-    return cmd;
-}
-
-int cmd(char *cmd, char *argv, ...) {
-    puts(cmd);
-    return 0;
-}
-
-/**
- * エラー出力する
- * @param format フォーマット文字列
- * @param ... フォーマットに入るパラメタ
- */
-void error(char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    fprintf(stderr, "Error: ");
-    vfprintf(stderr, format, args);
-    fprintf(stderr, "\n");
-    va_end(args);
-    exit(1);
 }
