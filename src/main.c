@@ -8,10 +8,10 @@
 typedef struct {
     char *cmd;
     char **argv;
-} CMD;
+} Command;
 
 int cmd(char *cmd, char *argv, ...);
-CMD gen_command(char *input);
+Command gen_command(char *input);
 void error(char *format, ...);
 
 int main() {
@@ -22,7 +22,7 @@ int main() {
             error("Too long statement (max: %d)", MAX_LEN);
         }
 
-        CMD cmd = gen_command(buff);
+        Command cmd = gen_command(buff);
         puts(cmd.cmd);
 
         int i = 0;
@@ -36,12 +36,12 @@ int main() {
 }
 
 /**
- * 入力からコマンドを解釈し CMD 構造体を返す
+ * 入力からコマンドを解釈し Command 構造体を返す
  * @param input 1行の入力
- * @return CMD
+ * @return Command
  */
-CMD gen_command(char *input) {
-    CMD cmd;
+Command gen_command(char *input) {
+    Command cmd;
     cmd.cmd = strtok(input, " ");
 
     cmd.argv = malloc((sizeof (void*)) * MAX_ARG);
