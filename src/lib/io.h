@@ -1,3 +1,5 @@
+#define DEBUG
+
 /**
  * エラー出力する
  * @param format フォーマット文字列

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#define DEBUG
+#include "io.h"
 
 void error(char *format, ...) {
     va_list args;

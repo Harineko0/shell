@@ -1,12 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <dirent.h>
 #include "../global.h"
 #include "../lib/io.h"
 #include "../lib/str.h"
 #include "../lib/path.h"
 
 typedef unsigned long long ull;
+
+void error_dir(char *dir) {
+    error("cd %s: No such file or directory", dir);
+}
 
 int cd(char **argv) {
     char *dir = argv[0];
@@ -27,11 +32,12 @@ int cd(char **argv) {
     } else if (start == '~') {
         // ホームディレクトリ (~)
         if (dir_len > 1 && dir[1] != '/') {
-            error("cd %s: No such file or directory", dir);
+            error_dir(dir);
             return 1;
         }
 
-        char *home = "/c/Users/harin"; // TODO: getenv("HOME");
+//        char *home = strdup(getenv("HOME")); // TODO: getenv("HOME");
+        char *home = "/c/Users/harin";
 
         if (dir_len == 1) {
             tmp = home;
@@ -43,6 +49,18 @@ int cd(char **argv) {
     }
 
     debug("%s", tmp);
+
+//    if (tmp == NULL) {
+//        error_dir(dir);
+//        return 1;
+//    }
+//
+//    DIR *dfd = opendir(tmp);
+//    if (dfd == NULL) {
+//        error_dir(dir);
+//        return 1;
+//    }
+//    closedir(dfd);
 
     // cwd を更新
     char *old = cwd;

@@ -16,6 +16,8 @@ int main() {
 
     init_global();
 
+    fputs(cwd, stdout);
+    fputs(">", stdout);
     while (fgets(buff, MAX_LEN, stdin) != NULL) {
         ull len = strlen(buff);
         if (buff[len - 1] != '\n') {
@@ -31,7 +33,9 @@ int main() {
         if (fun != NULL) {
             fun(cmd.argv);
         }
-        break;
+
+        fputs(cwd, stdout);
+        fputs(">", stdout);
     }
 
     return 0;

@@ -18,6 +18,10 @@ char *path_merge(char* a, char *b);
 /// パスを正規化する. 成功したら 0 を, 失敗したら 1 を返す
 int path_normalize(char *path);
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
 char *path_resolve(char *a, char *b) {
     char *merged = path_merge(a, b);
     int result = path_normalize(merged);
@@ -97,7 +101,7 @@ int path_normalize(char *path) {
                     // 1 つ前の / まで戻す
                     int index = strfindback(path, '/', new, 2);
                     debug("index1: %s, %d", path, index);
-                    new = index;
+                    new = max(index, 0);
                 }
 
                 state = NUNUNU;
@@ -108,7 +112,7 @@ int path_normalize(char *path) {
                     // 2 つ前の / まで戻す
                     int index = strfindback(path, '/', new, 3);
                     debug("index2: %s, %d", path, index);
-                    new = index;
+                    new = max(index, 0);
                 }
 
                 state = NUNUNU;
@@ -118,6 +122,6 @@ int path_normalize(char *path) {
         path[new++] = c;
     }
 
-    path[new] = '\0';
+    path[new - 1] = '\0';
     return 0;
 }
