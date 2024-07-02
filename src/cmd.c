@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "cmd.h"
-#include "../lib/map.h"
-#include "cd.h"
-#include "pushd.h"
+#include "lib/map.h"
+#include "cmd/cd.h"
+#include "cmd/pushd.h"
 
 #define CMD_SIZE 100
 

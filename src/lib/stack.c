@@ -30,14 +30,16 @@ void s_push(Stack *stack, void *item) {
 }
 
 void *s_pop(Stack *stack) {
-    int index = stack->index--;
+    int index = stack->index;
+    void *item = stack->bottom[index];
+    stack->bottom[index] = NULL;
 
-    if (index < 0) {
+    if (index-- < 0) {
         index = stack->size - 1;
         stack->index = index;
     }
 
-    return stack->bottom[index];
+    return item;
 }
 
 void s_free(Stack *stack) {

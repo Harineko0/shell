@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "cmd/cmd.h"
+#include "cmd.h"
 #include "lib/io.h"
 #include "cmd/cd.h"
 #include "lib/map.h"
