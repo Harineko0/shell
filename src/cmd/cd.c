@@ -4,22 +4,9 @@
 #include "../global.h"
 #include "../lib/io.h"
 #include "../lib/str.h"
-#define MAX_DIR_LEN 100
+#include "../lib/path.h"
 
 typedef unsigned long long ull;
-
-char *path_merge(char* a, char *b);
-/// パスを正規化する. 成功したら 0 を, 失敗したら 1 を返す
-int path_normalize(char *path);
-/// 文字列で from_index から後ろ向きに数えて key が count 回目に出現した index を返す
-int strfindback(const char *str, char key, int from_index, int count);
-
-typedef enum {
-    NUNUNU, // \0 \0 \0
-    NUNUSL, // \0 \0 /
-    NUSLPE, // \0 / .
-    SLPEPE, // / . .
-} State;
 
 int cd(char **argv) {
     char *dir = argv[0];
@@ -31,163 +18,37 @@ int cd(char **argv) {
     }
 
     char start = dir[0];
-    ull dirlen = strlen(dir);
+    ull dir_len = strlen(dir);
     char *tmp;
 
-    // 絶対パス (/**)
     if (start == '/') {
+        // 絶対パス (/**)
         tmp = dir;
     } else if (start == '~') {
-        if (dirlen > 1 && dir[1] != '/') {
+        // ホームディレクトリ (~)
+        if (dir_len > 1 && dir[1] != '/') {
             error("cd %s: No such file or directory", dir);
             return 1;
         }
 
         char *home = "/c/Users/harin"; // TODO: getenv("HOME");
-        tmp = path_merge(home, dir + 2);
+
+        if (dir_len == 1) {
+            tmp = home;
+        } else {
+            tmp = path_resolve(home, dir + 2);
+        }
     } else {
-        tmp = path_merge(cwd, dir);
+        tmp = path_resolve(cwd, dir);
     }
 
     debug("%s", tmp);
 
-    int result = path_normalize(tmp);
-    if (result == 1) {
-        error("cd %s: No such file or directory", dir);
-        return 1;
-    }
-
+    // cwd を更新
     char *old = cwd;
     cwd = tmp;
     free(old);
 
     debug("%s", cwd);
     return 0;
-}
-
-/// エラーだったら NULL を返す
-char *path_resolve(char *a, char *b) {
-    char *merged = path_merge(a, b);
-    int result = path_normalize(merged);
-
-    if (result == 0) {
-        free(merged);
-        return NULL;
-    }
-
-    return merged;
-}
-
-char *path_merge(char* a, char *b) {
-    ull alen = strlen(a);
-    ull blen = strlen(b);
-
-    int a_need_slash = a[alen - 1] != '/';
-    int b_need_slash = b[blen - 1] != '/';
-    ull reslen = alen + blen + a_need_slash + b_need_slash;
-    char *merged = calloc(reslen, sizeof (char));
-    merged[0] = '\0';
-
-    strcat_s(merged, 100, a);
-    if (a_need_slash) strcat_s(&merged[alen], MAX_DIR_LEN, "/");
-    strcat_s(&merged[alen + a_need_slash], MAX_DIR_LEN, b);
-    if (b_need_slash) strcat_s(&merged[alen + a_need_slash + blen], MAX_DIR_LEN, "/");
-
-    return merged;
-}
-
-/**
- * x := [^./]
- * A[\0, \0, \0] --/-> B[\0, \0, /]
- * B[\0, \0, /] --/-> error
- * B[\0, \0, /] --.-> C[\0, /, .]
- * B[\0, \0, /] --x-> A[\0, \0, \0]
- * C[\0, /, .] --/-> A[\0, \0, \0] & new を一つ前の / まで戻す
- * C[\0, /, .] --.-> D[/, ., .]
- * C[\0, /, .] --x-> A[\0, \0, \0]
- * D[/, ., .] --/-> A[\0, \0, \0] & new を二つ前の / まで戻す
- * D[/, ., .] --.-> A[\0, \0, \0]
- * D[/, ., .] --x-> A[\0, \0, \0]
- */
-int path_normalize(char *path) {
-    int old = 0, new = 0;
-    char c;
-    State state = NUNUNU;
-
-    // パスを一文字ずつ読む
-    while ((c = path[old++]) != '\0') {
-        switch (state) {
-            case NUNUNU:
-                if (c == '/') {
-                    state = NUNUSL;
-                }
-                break;
-
-            case NUNUSL:
-                if (c == '/') {
-                    // error
-                    return 1;
-                }
-                if (c == '.') {
-                    state = NUSLPE;
-                } else {
-                    state = NUNUNU;
-                }
-                break;
-
-            case NUSLPE:
-                if (c == '.') {
-                    state = SLPEPE;
-                    break;
-                }
-
-                if (c == '/') {
-                    // 1 つ前の / まで戻す
-                    int index = strfindback(path, '/', new, 2);
-                    debug("index1: %s, %d", path, index);
-                    new = index;
-                }
-
-                state = NUNUNU;
-                break;
-
-            case SLPEPE:
-                if (c == '/') {
-                    // 2 つ前の / まで戻す
-                    int index = strfindback(path, '/', new, 3);
-                    debug("index2: %s, %d", path, index);
-                    new = index;
-                }
-
-                state = NUNUNU;
-                break;
-        }
-
-        path[new++] = c;
-    }
-
-    path[new] = '\0';
-    return 0;
-}
-
-int strfindback(const char *str, char key, int from_index, int count) {
-    int found = 0;
-    char c;
-
-    while (from_index > 0 && found < count) {
-        // 後ろから探索する
-        c = str[from_index--];
-
-        if (c == key) {
-            found++;
-        }
-    }
-
-    // 見つからなかった場合
-    if (found < count) {
-        return -1;
-    }
-
-    // 最後に from_index-- したので 1 戻す
-    return from_index + 1;
 }
