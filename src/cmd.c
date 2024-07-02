@@ -5,6 +5,7 @@
 #include "lib/map.h"
 #include "cmd/cd.h"
 #include "cmd/pushd.h"
+#include "cmd/dirs.h"
 
 #define CMD_SIZE 100
 
@@ -17,6 +18,7 @@ void init_map() {
 
     h_insert(map, "cd", cd);
     h_insert(map, "pushd", pushd);
+    h_insert(map, "dirs", dirs);
 }
 
 c_fun c_get(char *cmd) {
