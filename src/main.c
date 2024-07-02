@@ -21,7 +21,7 @@ int main() {
     while (fgets(buff, MAX_LEN, stdin) != NULL) {
         ull len = strlen(buff);
         if (buff[len - 1] != '\n') {
-            error("Too long statement (max: %d)", MAX_LEN);
+            error("Too long statement (size: %d)", MAX_LEN);
         }
 
         char *newline = strchr(buff, '\n');

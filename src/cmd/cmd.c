@@ -4,6 +4,8 @@
 #include "cmd.h"
 #include "../lib/map.h"
 #include "cd.h"
+#include "pushd.h"
+
 #define CMD_SIZE 100
 
 typedef unsigned long long ull;
@@ -14,6 +16,7 @@ void init_map() {
     map = h_create(CMD_SIZE);
 
     h_insert(map, "cd", cd);
+    h_insert(map, "pushd", pushd);
 }
 
 c_fun c_get(char *cmd) {
