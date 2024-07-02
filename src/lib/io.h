@@ -4,3 +4,4 @@
  * @param ... フォーマットに入るパラメタ
  */
 void error(char *format, ...);
+void debug(char *format, ...);
