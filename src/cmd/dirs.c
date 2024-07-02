@@ -3,10 +3,11 @@
 
 int dirs(char **argv) {
     int count = 0;
+    int size = dir_stack->size;
     int index = dir_stack->index;
     char *top = dir_stack->bottom[index];
 
-    while (top != NULL) {
+    while (top != NULL && count < size) {
         printf(" %d %s\n", count++, top);
 
         index--;
