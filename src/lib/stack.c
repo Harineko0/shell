@@ -10,39 +10,44 @@ Stack *s_create(int size) {
         return NULL;
     }
 
-    stack->index = 0;
+    stack->top = 0;
+    stack->bottom = 0;
     stack->size = size;
-    stack->bottom = calloc(size, sizeof (void *));
+    stack->items = calloc(size, sizeof (void *));
     return stack;
 }
 
 void s_push(Stack *stack, void *item) {
-    int index = stack->index++;
-    index++;
+    int top = stack->top;
+    stack->items[top] = item;
+    top++;
 
     // 最大サイズまで格納したら古いものを上書き
-    if (index >= stack->size) {
-        index = 0;
+    if (top >= stack->size) {
+        top = 0;
     }
 
-    stack->index = index;
-    stack->bottom[index] = item;
+    if (top <= stack->bottom) {
+        stack->bottom++;
+    }
+
+    stack->top = top;
 }
 
 void *s_pop(Stack *stack) {
-    int index = stack->index;
-    void *item = stack->bottom[index];
-    stack->bottom[index] = NULL;
+    int index = stack->top;
+    void *item = stack->items[index];
+    stack->items[index] = NULL;
 
     if (index-- < 0) {
         index = stack->size - 1;
     }
-    stack->index = index;
+    stack->top = index;
 
     return item;
 }
 
 void s_free(Stack *stack) {
-    free(stack->bottom);
+    free(stack->items);
     free(stack);
 }

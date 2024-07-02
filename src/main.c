@@ -27,6 +27,7 @@ int main() {
         char *newline = strchr(buff, '\n');
         if (newline) *newline = '\0';
 
+        s_push(cmd_stack, strdup(buff));
         Command cmd = c_interprete(buff, MAX_ARG);
 
         c_fun fun = c_get(cmd.cmd);

@@ -4,17 +4,17 @@
 int dirs(char **argv) {
     int count = 0;
     int size = dir_stack->size;
-    int index = dir_stack->index;
-    char *top = dir_stack->bottom[index];
+    int top = dir_stack->top - 1;
+    char *item = dir_stack->items[top];
 
-    while (top != NULL && count < size) {
-        printf(" %d %s\n", count++, top);
+    while (item != NULL && count < size) {
+        printf(" %d %s\n", count++, item);
 
-        index--;
-        if (index < 0) {
-            index = dir_stack->size - 1;
+        top--;
+        if (top < 0) {
+            top = size - 1;
         }
-        top = dir_stack->bottom[index];
+        item = dir_stack->items[top];
     }
 
     return 0;

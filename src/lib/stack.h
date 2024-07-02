@@ -1,6 +1,7 @@
 typedef struct {
-    void **bottom;
-    int index;
+    void **items;
+    int top;
+    int bottom;
     int size;
 } Stack;
 
