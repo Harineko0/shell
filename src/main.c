@@ -7,7 +7,6 @@
 #include "global.h"
 
 #define MAX_LEN 256
-#define MAX_ARG 10
 
 typedef unsigned long long ull;
 
@@ -16,10 +15,22 @@ int main() {
 
     init_global();
 
-    fputs(cwd, stdout);
-    fputs(">", stdout);
-    while (fgets(buff, MAX_LEN, stdin) != NULL) {
+    while (true) {
+        fputs(cwd, stdout);
+        fputs(">", stdout);
+
+        fgets(buff, MAX_LEN, stdin);
+
         ull len = strlen(buff);
+
+        if (len == 0) {
+            continue;
+        }
+
+        if (strcmp(buff, "exit") == 0) {
+            break;
+        }
+
         if (buff[len - 1] != '\n') {
             error("Too long statement (size: %d)", MAX_LEN);
         }
@@ -27,16 +38,7 @@ int main() {
         char *newline = strchr(buff, '\n');
         if (newline) *newline = '\0';
 
-        s_push(cmd_stack, strdup(buff));
-        Command cmd = c_interprete(buff, MAX_ARG);
-
-        c_fun fun = c_get(cmd.cmd);
-        if (fun != NULL) {
-            fun(cmd.argv);
-        }
-
-        fputs(cwd, stdout);
-        fputs(">", stdout);
+        c_execute(buff);
     }
 
     return 0;

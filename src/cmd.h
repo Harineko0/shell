@@ -5,6 +5,8 @@ typedef struct {
 
 typedef int (*c_fun)(char**);
 
+int c_execute(char *cmd);
+
 c_fun c_get(char *cmd);
 
 /**

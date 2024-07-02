@@ -59,11 +59,11 @@ void *h_get(const HashMap *map, const char *key) {
 
     Entry *entry = map->entries[index];
 
-    if (entry == NULL) return NULL;
-
     while (strcmp(entry->key, key) != 0 && entry != NULL) {
         entry = entry->next;
     }
+
+    if (entry == NULL) return NULL;
 
     return entry->value;
 }

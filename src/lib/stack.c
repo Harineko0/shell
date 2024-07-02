@@ -47,6 +47,10 @@ void *s_pop(Stack *stack) {
     return item;
 }
 
+void *s_top(Stack *stack) {
+    return stack->items[stack->top - 1];
+}
+
 void s_free(Stack *stack) {
     free(stack->items);
     free(stack);
