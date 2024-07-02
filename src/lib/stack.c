@@ -36,8 +36,8 @@ void *s_pop(Stack *stack) {
 
     if (index-- < 0) {
         index = stack->size - 1;
-        stack->index = index;
     }
+    stack->index = index;
 
     return item;
 }

@@ -100,7 +100,6 @@ int path_normalize(char *path) {
                 if (c == '/') {
                     // 1 つ前の / まで戻す
                     int index = strfindback(path, '/', new, 2);
-                    debug("index1: %s, %d", path, index);
                     new = max(index, 0);
                 }
 
@@ -111,7 +110,6 @@ int path_normalize(char *path) {
                 if (c == '/') {
                     // 2 つ前の / まで戻す
                     int index = strfindback(path, '/', new, 3);
-                    debug("index2: %s, %d", path, index);
                     new = max(index, 0);
                 }
 

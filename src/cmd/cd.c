@@ -48,7 +48,7 @@ int cd(char **argv) {
         tmp = path_resolve(cwd, dir);
     }
 
-    debug("%s", tmp);
+//    debug("%s", tmp);
 
 //    if (tmp == NULL) {
 //        error_dir(dir);
@@ -67,6 +67,6 @@ int cd(char **argv) {
     cwd = tmp;
     free(old);
 
-    debug("%s", cwd);
+//    debug("%s", cwd);
     return 0;
 }
