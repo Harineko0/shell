@@ -8,3 +8,5 @@ bool strisnum(const char *str);
 void strreplace(char *str, char from, char to);
 
 bool strstart(const char *str1, const char *str2);
+
+char *substr(const char *from, const char *to);

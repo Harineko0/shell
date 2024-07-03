@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "str.h"
 
 int strfindback(const char *str, char key, int from_index, int count) {
@@ -58,4 +59,15 @@ bool strstart(const char *str1, const char *str2) {
     }
 
     return true;
+}
+
+char *substr(const char *from, const char *to) {
+    char *word = calloc(to - from + 1, sizeof (char *));
+    char *w = word;
+
+    while (to - from > 0) {
+        *w++ = *from++;
+    }
+    *w = '\0';
+    return word;
 }

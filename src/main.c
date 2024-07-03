@@ -6,6 +6,7 @@
 #include "lib/map.h"
 #include "global.h"
 #include "lib/str.h"
+#include "lexer.h"
 
 #define MAX_LEN 256
 
@@ -22,6 +23,13 @@ int main() {
 
         fgets(buff, MAX_LEN, stdin);
 
+        char **res = lexer(buff);
+        while (*res != NULL) {
+            strreplace(*res, ' ', '_');
+            debug("result: %s", *res++);
+        }
+
+        continue;
         ull len = strlen(buff);
 
         if (len <= 1) {
