@@ -21,3 +21,41 @@ int strfindback(const char *str, char key, int from_index, int count) {
     // 最後に from_index-- したので 1 戻す
     return from_index + 1;
 }
+
+bool strisnum(const char *str) {
+    char c;
+    while ((c = *str) != '\0') {
+        if (c < '0' || c > '9') {
+            return false;
+        }
+        str++;
+    }
+    return true;
+}
+
+void strreplace(char *str, char from, char to) {
+    char c;
+    while ((c = *str) != '\0') {
+        if (c == from) {
+            *str = to;
+        }
+        str++;
+    }
+}
+
+bool strstart(const char *str1, const char *str2) {
+    char c1, c2;
+
+    while ((c1 = *str1++) != '\0' && (c2 = *str2++) != '\0') {
+        if (c1 != c2) {
+            return false;
+        }
+    }
+
+    // str2 を最後まで探索してない
+    if (c2 != '\0') {
+        return false;
+    }
+
+    return true;
+}

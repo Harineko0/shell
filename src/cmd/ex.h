@@ -1,2 +1,2 @@
 /// !! (exclamation exclamation)
-int exex(char **argv);
+int ex(char *cmd);

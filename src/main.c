@@ -5,6 +5,7 @@
 #include "cmd/cd.h"
 #include "lib/map.h"
 #include "global.h"
+#include "lib/str.h"
 
 #define MAX_LEN 256
 
@@ -23,11 +24,11 @@ int main() {
 
         ull len = strlen(buff);
 
-        if (len == 0) {
+        if (len <= 1) {
             continue;
         }
 
-        if (strcmp(buff, "exit") == 0) {
+        if (strstart(buff, "exit")) {
             break;
         }
 
