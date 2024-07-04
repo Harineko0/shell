@@ -1,7 +1,7 @@
 typedef enum {
     UNDEFINED,
     LITERAL,
-//    IF,
+    IF,
 //    THEN,
 //    ELIF,
 //    ELSE,
@@ -9,13 +9,13 @@ typedef enum {
 //    FOR,
 //    DO,
 //    DONE,
-//    EQUAL,
+    EQUAL,
 //    LEFTPARE,
 //    RIGHTPARE,
 //    LEFTCURLY,
 //    RIGHTCURLY,
-//    EOL, // ;, \n
-//    DOLLAR
+    EOL, // ;, \n
+    DOLLAR
 } TokenType;
 
 typedef struct token Token;

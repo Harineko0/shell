@@ -48,13 +48,26 @@ char *Token_to_string(Token *token) {
         case LITERAL:
             type = "LITERAL";
             break;
+        case IF:
+            type = "IF";
+            break;
+        case EQUAL:
+            type = "EQUAL";
+            break;
+        case EOL:
+            type = "EOL";
+            break;
+        case DOLLAR:
+            type = "DOLLAR";
+            break;
     }
 
     if (token->string == NULL) return type;
 
-    char *buff = calloc(strlen(type) + 2 + strlen(token->string), sizeof (char));
+    char *buff = calloc(strlen(type) + 3 + strlen(token->string), sizeof (char));
     strcat_s(buff, 100, type);
-    strcat_s(buff, 100, ": ");
+    strcat_s(buff, 100, " (");
     strcat_s(buff, 100, token->string);
+    strcat_s(buff, 100, ")");
     return buff;
 }

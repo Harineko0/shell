@@ -100,6 +100,8 @@ $
     * RIGHTCURLY }
     * SEMICOLON ;
     * DOLLAR $
+  * lexer
+    * 
   * AST
     * Expression = command, var=, fn 
     * Statement = if, for, function
