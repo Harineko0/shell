@@ -23,10 +23,10 @@ int main() {
 
         fgets(buff, MAX_LEN, stdin);
 
-        char **res = lexer(buff);
-        while (*res != NULL) {
-            strreplace(*res, ' ', '_');
-            debug("result: %s", *res++);
+        Token *token = lexer(buff);
+        while (token != NULL) {
+            debug("  token = %s", Token_to_string(token));
+            token = token->next;
         }
 
         continue;

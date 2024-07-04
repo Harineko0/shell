@@ -1,1 +1,3 @@
-char** lexer(char *str);
+#include "token.h"
+
+Token *lexer(char *str);

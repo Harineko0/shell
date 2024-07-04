@@ -1,9 +1,8 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include "lib/io.h"
 #include "lib/str.h"
+#include "lexer.h"
 
-#define MAX_TOKEN 256
 #define is_eof(c) (c == '\n' || c == EOF || c == '\0')
 
 typedef unsigned long long ull;
@@ -16,8 +15,10 @@ typedef enum {
 } State;
 
 /// 字句解析
-char** lexer(char *str) {
-    char *tokens[MAX_TOKEN], **t = tokens, *s = str;
+Token *lexer(char *str) {
+    Token *first_token = Token_create();
+    Token *token = first_token;
+    char *s = str;
     char c;
     State state = DEFAULT;
 
@@ -37,14 +38,14 @@ char** lexer(char *str) {
         if (state == WORD) {
             debug("    WORD");
             if (c == ' ' || c == '\\' || is_eof(c)) {
-                *t++ = substr(s, str - 1);
+                char *substring = substr(s, str - 1);
+                token = Token_insert(token, LITERAL, substring);
                 s = str;
                 state = DEFAULT;
             }
         } else if (state == SPACE) {
             debug("    SPACE");
             if (c != ' ') {
-                *t++ = substr(s - 1, str - 1);
                 s = str - 1;
                 state = DEFAULT;
             }
@@ -57,14 +58,6 @@ char** lexer(char *str) {
         }
     }
 
-    char **result = calloc(t - tokens + 1, sizeof (char *));
-    char **r = result, **_t = tokens;
-
-    while (t - _t > 0) {
-        *r++ = *_t++;
-    }
-
-    *r = NULL;
-
-    return result;
+    debug("return");
+    return first_token;
 }

@@ -52,10 +52,88 @@ $
 * シェルスクリプト
 
 ### Extra
-* test コマンド? シェルスクリプト?
-* シェル変数
-* mkdir
-* cat
+* シェルスクリプト
+  * `command <args...>`
+  * `var="string"`
+  * `var=10`
+  * `list=(val1 val2 val3)`
+  * `$(( 1 + 1 ))`
+  * `$var`
+  * ~~command \`command <args...>\`~~
+  * ```shell
+    # [[ $var = chicken ]]
+    if expression; then
+    
+    elif expression; then
+    
+    else
+    
+    fi
+    ```
+  * ```shell
+    # 1 2 3 or `seq 1 -l 10`
+    for symbol in expression; do
+    
+    done
+    ```
+  * ```shell
+    function symbol (){
+      echo "$1 $2"
+    }
+    symbol 'arg'
+    ```
+* 解析
+  * トークン
+    * LITERAL
+    * IF
+    * THEN
+    * ELIF
+    * ELSE
+    * FI
+    * FOR
+    * DO
+    * DONE
+    * EQUAL =
+    * LEFTPARE (
+    * RIGHTPARE )
+    * LEFTCURLY {
+    * RIGHTCURLY }
+    * SEMICOLON ;
+    * DOLLAR $
+  * AST
+    * Expression = command, var=, fn 
+    * Statement = if, for, function
+    * トップレベルシンボルの優先順位: function > alias > 内部 command > 外部 command
+```
+Program ::= Statement
+Statement ::= Statement* | <IfStatement | ForStatement | FunctionStatement | Expression> EOL
+IfStatement ::= 'if' Expression EOL 'then' Statement EOL
+  <'elif' Expression EOL 'then' Statement>*
+  <'else' Statement>? 'fi'
+ForStatement ::= 'for' Literal 'in' LiteralExpression EOL 'do' Statement 'done'
+FunctionStatement ::= 'function' Literal '()' '{' Statement '}'
+
+LiteralExpression ::= Literal+ | '`' Expression '`'
+Expression ::= CommandExpression | VariableExpression
+VariableExpression ::= Literal '=' Literal
+CommandExpression ::= Literal Literal* | '[[' Literal+ ']]'
+// ↓ for test command
+ConditionalExpression ::= '(' ConditionalExpression ')' 
+  | ConditionalExpression '&&' ConditionalExpression
+  | ConditionalExpression '||' ConditionalExpression
+  | '!' ConditionalExpression  // 論理否定
+  | VarLiteral <'==' | '!='> VarLiteral
+  | Number <'-eq' | '-ne' | '-lt' | '-le' | '-gt' | '-ge'> Number
+  | <'-d' | '-e' | '-f' | '-L' | '-r' | '-s' | '-w' | '-x'> Literal
+
+EOL ::= ';' | '\n'
+VarLiteral ::= '$' Literal | Literal
+Literal ::= Literal Literal | <'a' | 'b' | ... | 'z' | '_'>
+
+Number ::= ZNumber | NNumber ZNumber+
+ZNumber ::= 0 | NNumber
+NNumber ::= 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+```
 * リダイレクト
 
 ## 設計
