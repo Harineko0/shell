@@ -12,11 +12,11 @@ typedef unsigned long long ull;
 typedef enum {
     DEFAULT,
     SPACE,
-    ESCAPE,
     S_LITERAL,
     S_EOL,
     S_DOLLAR,
-    S_EQUAL
+    S_EQUAL,
+    S_DQUOTE
 } State;
 
 /// 字句解析
@@ -30,20 +30,20 @@ Token *lexer(char *str) {
     char prev_c = 0;
 
     while ((c = *str++) != '\0') {
-        debug("> %c (%d)", c, c);
+//        debug("> %c (%d)", c, c);
         char next_c = *str;
 
         if (state == DEFAULT) {
             if (c == ' ') {
                 state = SPACE;
-            } else if (c == '\\') {
-                state = ESCAPE;
             } else if (is_eol(c)) {
                 state = S_EOL;
             } else if (c == '$' && is_literal(next_c)) {
                 state = S_DOLLAR;
             } else if (is_literal(prev_c) && c == '=' && next_c != ' ') {
                 state = S_EQUAL;
+            } else if (c == '\"') {
+                state = S_DQUOTE;
             } else {
                 // 普通の文字
                 state = S_LITERAL;
@@ -51,7 +51,7 @@ Token *lexer(char *str) {
         }
 
         if (state == S_LITERAL) {
-            debug("    S_LITERAL");
+//            debug("    S_LITERAL");
             char next_next_c = *(str + 1);
 
             // literal ではない かつ 次に来る文字が "= " ではない
@@ -69,7 +69,7 @@ Token *lexer(char *str) {
                 state = DEFAULT;
             }
         } else if (state == SPACE) {
-            debug("    SPACE");
+//            debug("    SPACE");
             if (next_c != ' ') {
                 s = str;
                 state = DEFAULT;
@@ -95,13 +95,18 @@ Token *lexer(char *str) {
             } else {
                 state = DEFAULT;
             }
-        } else if (state == ESCAPE) {
-            // TODO
+        } else if (state == S_DQUOTE) {
+            if (next_c == '\"') {
+                char *substring = substr(s + 1, str);
+                token = Token_insert(token, LITERAL, substring);
+                str++;
+                s = str;
+                state = DEFAULT;
+            }
         }
 
         prev_c = c;
     }
 
-    debug("return");
     return first_token;
 }

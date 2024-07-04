@@ -15,7 +15,8 @@ typedef enum {
 //    LEFTCURLY,
 //    RIGHTCURLY,
     EOL, // ;, \n
-    DOLLAR
+    DOLLAR,
+    DQUOTE, // "
 } TokenType;
 
 typedef struct token Token;

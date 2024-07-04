@@ -60,6 +60,9 @@ char *Token_to_string(Token *token) {
         case DOLLAR:
             type = "DOLLAR";
             break;
+        case DQUOTE:
+            type ="\'";
+            break;
     }
 
     if (token->string == NULL) return type;
