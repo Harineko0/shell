@@ -13,9 +13,10 @@ typedef enum {
     DEFAULT,
     SPACE,
     ESCAPE,
-    WORD,
+    S_LITERAL,
     S_EOL,
-    S_DOLLAR
+    S_DOLLAR,
+    S_EQUAL
 } State;
 
 /// 字句解析
@@ -25,6 +26,8 @@ Token *lexer(char *str) {
     char *s = str;
     char c;
     State state = DEFAULT;
+
+    char prev_c = 0;
 
     while ((c = *str++) != '\0') {
         debug("> %c (%d)", c, c);
@@ -38,16 +41,21 @@ Token *lexer(char *str) {
             } else if (is_eol(c)) {
                 state = S_EOL;
             } else if (c == '$' && is_literal(next_c)) {
-                state =S_DOLLAR;
+                state = S_DOLLAR;
+            } else if (is_literal(prev_c) && c == '=' && next_c != ' ') {
+                state = S_EQUAL;
             } else {
                 // 普通の文字
-                state = WORD;
+                state = S_LITERAL;
             }
         }
 
-        if (state == WORD) {
-            debug("    WORD");
-            if (next_c == ' ' || is_eof(next_c)) {
+        if (state == S_LITERAL) {
+            debug("    S_LITERAL");
+            char next_next_c = *(str + 1);
+
+            // literal ではない かつ 次に来る文字が "= " ではない
+            if (!is_literal(next_c) && !(next_c == '=' && next_next_c == ' ')) {
                 ull len = str - s;
 
                 if (len == 2 && strstart(s, "if")) {
@@ -77,9 +85,21 @@ Token *lexer(char *str) {
             token = Token_insert(token, DOLLAR, NULL);
             s = str;
             state = DEFAULT;
+        } else if (state == S_EQUAL) {
+            token = Token_insert(token, EQUAL, NULL);
+            s = str;
+
+            // = が連続したら必ず S_LITERAL
+            if (next_c == '=') {
+                state = S_LITERAL;
+            } else {
+                state = DEFAULT;
+            }
         } else if (state == ESCAPE) {
             // TODO
         }
+
+        prev_c = c;
     }
 
     debug("return");
