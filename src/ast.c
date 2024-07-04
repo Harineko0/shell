@@ -5,10 +5,12 @@
 int CommandExpression_run(Expression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
     debug("%s", expr->command);
-    Literal *arg = expr->args;
 
-    while (*arg != NULL) {
-        debug("%s", *arg++);
+    if (expr->args != NULL) {
+        Literal *arg = expr->args;
+        while (*arg != NULL) {
+            debug("%s", *arg++);
+        }
     }
 
     return 0;
@@ -16,14 +18,18 @@ int CommandExpression_run(Expression *expression) {
 
 void CommandExpression_free(Expression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
-    Literal *first = expr->args;
-    Literal *last = first;
-    while (*++last != NULL);
-    while (last - first >= 0) {
-        free(last);
-        last--;
+    Literal *args = expr->args;
+
+    if (args != NULL) {
+        Literal *last = args;
+        while (*++last != NULL);
+        while (last - args >= 0) {
+            free(last);
+            last--;
+        }
+        free(args);
     }
-    free(expr->args);
+
     free(expr->command);
     free(expr);
 }

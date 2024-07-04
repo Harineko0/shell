@@ -18,20 +18,17 @@ int main() {
 
     init_global();
 
-//    char *args[] = {"ab", "cd", NULL};
     char **args = calloc(3, sizeof (char *));
-    char *arg1 = calloc(3, sizeof (char));
-    *arg1 = 'a';
-    *(arg1+1) = 'b';
-    *args = arg1;
-    char *arg2 = calloc(3, sizeof (char));
-    *arg2 = 'c';
-    *(arg2+1) = 'd';
-    *(args+1) = arg2;
-    *(args+2) = NULL;
+    *args = strdup("ab");
+    *(args+1) = strdup("cd");
+    char *cmd1 = strdup("cat");
+    char *cmd2 = strdup("echo");
 
-    CommandExpression *expr = CommandExpression_new("cat", args);
+    CommandExpression *expr = CommandExpression_new(cmd1, args);
+    CommandExpression *expr2 = CommandExpression_new(cmd2, NULL);
     ExpressionStatement *state = ExpressionStatement_new((Expression *) expr);
+    ExpressionStatement *state2 = ExpressionStatement_new((Expression *) expr2);
+    state->next = (Statement *) state2;
     Program *prog = Program_new((Statement *) state);
     Program_run(prog);
     Program_free(prog);
