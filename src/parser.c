@@ -25,6 +25,10 @@ Program *parser(Token *token) {
         } else if (type == EOL) {
             t = t->next;
         }
+
+        if (state == NULL) {
+            state = s;
+        }
     }
 
     return Program_new(state);
@@ -61,14 +65,16 @@ CommandExpression *parse_cmd_expr(Token **token) {
         *token = t->next;
     }
 
-    Literal *args = calloc(bufI, sizeof (Literal));
+    Literal *args = calloc(bufI + 1, sizeof (Literal));
     Literal *a = args, *b = buf;
+
+//    debug("  CommandExpression.cmd: %s", cmd);
 
     while ((a - args) < bufI) {
         *a++ = *b++;
+//        debug("  CommandExpression.arg: %s", *(a - 1));
     }
 
-    debug("    CommandExpression: %s", cmd);
     return CommandExpression_new(cmd, args);
 }
 

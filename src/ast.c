@@ -4,12 +4,12 @@
 
 int CommandExpression_run(Expression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
-    debug("%s", expr->command);
+    debug("cmd: %s", expr->command);
 
     if (expr->args != NULL) {
         Literal *arg = expr->args;
         while (*arg != NULL) {
-            debug("%s", *arg++);
+            debug("arg: %s", *arg++);
         }
     }
 
