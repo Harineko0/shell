@@ -62,9 +62,9 @@ $
   * ~~command \`command <args...>\`~~
   * ```shell
     # [[ $var = chicken ]]
-    if expression; then
+    if expr; then
     
-    elif expression; then
+    elif expr; then
     
     else
     
@@ -72,7 +72,7 @@ $
     ```
   * ```shell
     # 1 2 3 or `seq 1 -l 10`
-    for symbol in expression; do
+    for symbol in expr; do
     
     done
     ```

@@ -1,13 +1,13 @@
 typedef char * Literal;
 
 typedef enum {
-    COMMAND,
-    VARIABLE,
+    E_COMMAND,
+    E_VARIABLE,
 } ExpressionType;
 
 typedef struct expression Expression;
-typedef int (*ExpressionRun)(Expression);
-typedef int (*ExpressionFree)(Expression);
+typedef int (*ExpressionRun)(Expression*);
+typedef void (*ExpressionFree)(Expression*);
 struct expression {
     ExpressionType type;
     ExpressionRun run;
@@ -34,15 +34,15 @@ typedef struct {
 } VariableExpression;
 
 typedef enum {
-    IF,
-    FOR,
-    FUNC,
-    EXP
+    S_IF,
+    S_FOR,
+    S_FUNC,
+    S_EXP
 } StatementType;
 
 typedef struct statement Statement;
-typedef void (*StatementRun)(Statement);
-typedef int (*StatementFree)(Statement);
+typedef void (*StatementRun)(Statement*);
+typedef void (*StatementFree)(Statement*);
 struct statement {
     StatementType type;
     StatementRun run;
@@ -56,7 +56,7 @@ typedef struct {
     StatementFree free;
     Statement *next;
 
-    Expression *expression;
+    Expression *expr;
 } ExpressionStatement;
 
 typedef struct {
@@ -71,5 +71,14 @@ typedef struct {
 } IfStatement;
 
 typedef struct {
-    Statement *statement;
+    Statement *state;
 } Program;
+
+
+CommandExpression *CommandExpression_new(Literal cmd, Literal *args);
+
+ExpressionStatement *ExpressionStatement_new(Expression *expr);
+
+Program *Program_new(Statement *state);
+void Program_run(Program *prog);
+int Program_free(Program *prog);
