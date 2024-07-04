@@ -63,6 +63,27 @@ char *Token_to_string(Token *token) {
         case DQUOTE:
             type ="\'";
             break;
+        case THEN:
+            type = "THEN";
+            break;
+        case ELIF:
+            type = "ELIF";
+            break;
+        case ELSE:
+            type = "ELSE";
+            break;
+        case FI:
+            type = "FI";
+            break;
+        case FOR:
+            type = "FOR";
+            break;
+        case DO:
+            type = "DO";
+            break;
+        case DONE:
+            type = "DONE";
+            break;
     }
 
     if (token->string == NULL) return type;

@@ -60,6 +60,28 @@ Token *lexer(char *str) {
 
                 if (len == 2 && strstart(s, "if")) {
                     token = Token_insert(token, IF, NULL);
+
+                } else if (len == 4 && strstart(s, "then")) {
+                    token = Token_insert(token, THEN, NULL);
+
+                } else if (len == 4 && strstart(s, "elif")) {
+                    token = Token_insert(token, ELIF, NULL);
+
+                } else if (len == 4 && strstart(s, "else")) {
+                    token = Token_insert(token, ELSE, NULL);
+
+                } else if (len == 2 && strstart(s, "fi")) {
+                    token = Token_insert(token, FI, NULL);
+
+                } else if (len == 3 && strstart(s, "for")) {
+                    token = Token_insert(token, FOR, NULL);
+
+                } else if (len == 2 && strstart(s, "do")) {
+                    token = Token_insert(token, DO, NULL);
+
+                } else if (len == 4 && strstart(s, "done")) {
+                    token = Token_insert(token, DONE, NULL);
+
                 } else {
                     char *substring = substr(s, str);
                     token = Token_insert(token, LITERAL, substring);
