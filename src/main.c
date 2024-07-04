@@ -2,12 +2,11 @@
 #include <string.h>
 #include "cmd.h"
 #include "lib/io.h"
-#include "cmd/cd.h"
 #include "lib/map.h"
-#include "global.h"
 #include "lib/str.h"
+#include "global.h"
 #include "lexer.h"
-#include "ast.h"
+#include "parser.h"
 
 #define MAX_LEN 256
 
@@ -18,32 +17,20 @@ int main() {
 
     init_global();
 
-    char **args = calloc(3, sizeof (char *));
-    *args = strdup("ab");
-    *(args+1) = strdup("cd");
-    char *cmd1 = strdup("cat");
-    char *cmd2 = strdup("echo");
-
-    CommandExpression *expr = CommandExpression_new(cmd1, args);
-    CommandExpression *expr2 = CommandExpression_new(cmd2, NULL);
-    ExpressionStatement *state = ExpressionStatement_new((Expression *) expr);
-    ExpressionStatement *state2 = ExpressionStatement_new((Expression *) expr2);
-    state->next = (Statement *) state2;
-    Program *prog = Program_new((Statement *) state);
-    Program_run(prog);
-    Program_free(prog);
-
     while (true) {
         fputs(cwd, stdout);
         fputs(">", stdout);
 
         fgets(buff, MAX_LEN, stdin);
 
-        Token *token = lexer(buff);
-        while (token != NULL) {
-            debug("  token = %s", Token_to_string(token));
-            token = token->next;
+        Token *token = lexer(buff), *t = token;
+        while (t != NULL) {
+            debug("  token = %s", Token_to_string(t));
+            t = t->next;
         }
+
+        Program *prog = parser(token);
+        Program_run(prog);
 
         continue;
         ull len = strlen(buff);

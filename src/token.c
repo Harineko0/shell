@@ -3,7 +3,7 @@
 #include "token.h"
 #include "lib/io.h"
 
-Token *Token_create() {
+Token *Token_new() {
     Token *token = malloc(sizeof (Token));
     token->type = UNDEFINED;
     token->string = NULL;

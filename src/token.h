@@ -1,3 +1,6 @@
+#ifndef TOKEN_H
+#define TOKEN_H
+
 typedef enum {
     UNDEFINED,
     LITERAL,
@@ -26,7 +29,9 @@ struct token {
     Token *next;
 };
 
-Token *Token_create();
+Token *Token_new();
 Token *Token_insert(Token *prev, TokenType type, char *string);
 void Token_free(Token *first);
 char *Token_to_string(Token *token);
+
+#endif

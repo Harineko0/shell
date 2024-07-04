@@ -1,3 +1,6 @@
+#ifndef CMD_H
+#define CMD_H
+
 typedef struct {
     char *cmd;
     char **argv;
@@ -16,3 +19,5 @@ c_fun c_get(char *cmd);
  * @return Command
  */
 Command c_interprete(char *line, int argc);
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef AST_H
+#define AST_H
+
 typedef char * Literal;
 
 typedef enum {
@@ -78,7 +81,10 @@ typedef struct {
 CommandExpression *CommandExpression_new(Literal cmd, Literal *args);
 
 ExpressionStatement *ExpressionStatement_new(Expression *expr);
+Statement *Statement_append(Statement *prev, Statement *new);
 
 Program *Program_new(Statement *state);
 void Program_run(Program *prog);
 int Program_free(Program *prog);
+
+#endif

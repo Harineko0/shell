@@ -108,7 +108,7 @@ $
     * トップレベルシンボルの優先順位: function > alias > 内部 command > 外部 command
 ```
 Program ::= Statement
-Statement ::= Statement* | <IfStatement | ForStatement | FunctionStatement | Expression> EOL
+Statement ::= Statement Statement | <IfStatement | ForStatement | FunctionStatement | Expression> EOL
 IfStatement ::= 'if' Expression EOL 'then' Statement EOL
   <'elif' Expression EOL 'then' Statement>*
   <'else' Statement>? 'fi'

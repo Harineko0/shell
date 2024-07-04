@@ -3,7 +3,6 @@
 #include "lib/str.h"
 #include "lexer.h"
 
-#define is_eof(c) (c == '\n' || c == EOF || c == '\0')
 #define is_eol(c) (c == '\n' || c == ';')
 #define is_literal(c) ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')
 
@@ -21,7 +20,7 @@ typedef enum {
 
 /// 字句解析
 Token *lexer(char *str) {
-    Token *first_token = Token_create();
+    Token *first_token = Token_new();
     Token *token = first_token;
     char *s = str;
     char c;

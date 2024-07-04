@@ -1,3 +1,6 @@
+#ifndef GLOBAL_H
+#define GLOBAL_H
+
 #include <stdlib.h>
 #include "lib/stack.h"
 
@@ -7,3 +10,5 @@ extern Stack *dir_stack;
 extern Stack *cmd_stack;
 
 void init_global();
+
+#endif

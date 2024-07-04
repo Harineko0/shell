@@ -71,6 +71,11 @@ ExpressionStatement *ExpressionStatement_new(Expression *expr) {
     return state;
 }
 
+Statement *Statement_append(Statement *prev, Statement *new) {
+    if (prev != NULL) prev->next = new;
+    return new;
+}
+
 Program *Program_new(Statement *state) {
     Program *prog = malloc(sizeof (Program));
     prog->state = state;
