@@ -20,11 +20,13 @@ Program *parser(Token *token) {
     while (t != NULL) {
         TokenType type = t->type;
 
-        if (type == LITERAL) {
-            ExpressionStatement *expr_state = parse_expr_state(&t);
-            s = Statement_append(s, (Statement *) expr_state);
+        if (type == IF) {
+
         } else if (type == EOL) {
             t = t->next;
+        } else {
+            ExpressionStatement *expr_state = parse_expr_state(&t);
+            s = Statement_append(s, (Statement *) expr_state);
         }
 
         // state が初期化前
@@ -51,15 +53,15 @@ ExpressionStatement *parse_expr_state(Token **token) {
 
 CommandExpression *parse_cmd_expr(Token **token) {
     Token *t = *token;
-    if (t->string == NULL) {
-        error("Token.string is NULL");
-        exit(1);
-    }
+//    if (t->string == NULL) {
+//        error("Token.string is NULL");
+//        exit(1);
+//    }
     YieldExpression *cmd = parse_yield_expr(token);
 
-    YieldExpression *buf[MAX_ARG];\
+    YieldExpression *buf[MAX_ARG];
     int bufI = 0;
-    while ((*token)->type == LITERAL) {
+    while ((*token)->type != EOL) {
         if (bufI >= MAX_ARG) {
             error("Too many arguments. (max 64)\n");
             exit(1);
@@ -87,15 +89,9 @@ AssignExpression *parse_assign_expr(Token **token) {
     }
     Token *third = second->next;
 
-    if (first->type == LITERAL && second->type == EQUAL && third->type == LITERAL) {
-        YieldExpression *value = parse_yield_expr(&third);
-        *token = third;
-        return AssignExpression_new(strdup(first->string), value);
-    }
-
+    YieldExpression *value = parse_yield_expr(&third);
     *token = third;
-    fprintf(stderr, "Invalid token: %s=%s", first->string, third->string);
-    return NULL;
+    return AssignExpression_new(strdup(first->string), value);
 }
 
 YieldExpression *parse_yield_expr(Token **token) {
@@ -104,6 +100,20 @@ YieldExpression *parse_yield_expr(Token **token) {
     if (t->type == LITERAL) {
         *token = t->next;
         return (YieldExpression *) LiteralExpression_new(t->string);
+    }
+
+    Token *next = t->next;
+    // $Literal
+    if (t->type == DOLLAR && next != NULL && next->type == LITERAL) {
+        *token = next->next;
+        return (YieldExpression *) VariableExpression_new(next->string);
+    }
+
+    // $ の場合は普通の Literal に変更
+    if (t->type == DOLLAR && (next == NULL || next->type != LITERAL)) {
+        Literal literal = strdup("$");
+        *token = next;
+        return (YieldExpression *) LiteralExpression_new(literal);
     }
 
 //    if (t->type == DOLLAR) {

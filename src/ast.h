@@ -118,6 +118,7 @@ typedef struct {
 } Program;
 
 LiteralExpression *LiteralExpression_new(Literal literal);
+VariableExpression *VariableExpression_new(Literal symbol);
 
 CommandExpression *CommandExpression_new(YieldExpression *cmd, YieldExpression **args);
 AssignExpression *AssignExpression_new(Literal symbol, YieldExpression *value);

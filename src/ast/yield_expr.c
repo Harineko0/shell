@@ -23,3 +23,24 @@ LiteralExpression *LiteralExpression_new(Literal literal) {
     expr->literal = strdup(literal);
     return expr;
 }
+
+Literal VariableExpression_run(YieldExpression *expression) {
+    VariableExpression *expr = (VariableExpression *) expression;
+    return "some variable";
+}
+
+void VariableExpression_free(YieldExpression *expression) {
+    VariableExpression *expr = (VariableExpression *)expression;
+    debug("VariableExpression_free: %s", expr->symbol);
+    free(expr->symbol);
+    free(expr);
+}
+
+VariableExpression *VariableExpression_new(Literal symbol) {
+    VariableExpression *expr = malloc(sizeof (VariableExpression));
+    expr->type = YE_VARIABLE;
+    expr->run = VariableExpression_run;
+    expr->free = VariableExpression_free;
+    expr->symbol = symbol;
+    return expr;
+}
