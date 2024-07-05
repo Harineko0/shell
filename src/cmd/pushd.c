@@ -3,6 +3,6 @@
 
 int pushd(char **argv) {
     char *dir = strdup(cwd);
-    s_push(dir_stack, dir);
+    Stack_push(dir_stack, dir);
     return 0;
 }

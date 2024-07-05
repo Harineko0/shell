@@ -2,7 +2,7 @@
 #include "stack.h"
 #include "io.h"
 
-Stack *s_create(int size) {
+Stack *Stack_new(int size) {
     Stack *stack = malloc(sizeof (Stack));
 
     if (stack == NULL) {
@@ -17,7 +17,7 @@ Stack *s_create(int size) {
     return stack;
 }
 
-void s_push(Stack *stack, void *item) {
+void Stack_push(Stack *stack, void *item) {
     int top = stack->top;
     stack->items[top] = item;
     top++;
@@ -34,7 +34,7 @@ void s_push(Stack *stack, void *item) {
     stack->top = top;
 }
 
-void *s_pop(Stack *stack) {
+void *Stack_pop(Stack *stack) {
     int index = stack->top;
     void *item = stack->items[index];
     stack->items[index] = NULL;
@@ -47,11 +47,11 @@ void *s_pop(Stack *stack) {
     return item;
 }
 
-void *s_top(Stack *stack) {
+void *Stack_top(Stack *stack) {
     return stack->items[stack->top - 1];
 }
 
-void s_free(Stack *stack) {
+void Stack_free(Stack *stack) {
     free(stack->items);
     free(stack);
 }

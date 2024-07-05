@@ -34,7 +34,7 @@ int c_execute(char *cmd) {
         return ex(cmd);
     }
 
-    s_push(cmd_stack, strdup(cmd));
+    Stack_push(cmd_stack, strdup(cmd));
     Command command = c_interprete(cmd, MAX_ARG);
 
     c_fun fun = c_get(command.cmd);

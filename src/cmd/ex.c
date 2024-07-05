@@ -21,7 +21,7 @@ int ex(char *cmd) {
 
     if (cmd[1] == '!') {
         // !!
-        restored = s_top(cmd_stack);
+        restored = Stack_top(cmd_stack);
     } else if (strisnum(cmd + 1)) {
         // !n
         int n = atoi(cmd + 1);

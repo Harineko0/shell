@@ -1,7 +1,7 @@
 #include "../global.h"
 
 int popd(char **argv) {
-    char *dir = s_pop(dir_stack);
+    char *dir = Stack_pop(dir_stack);
 
     if (dir == NULL) {
         return 0;

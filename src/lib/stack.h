@@ -5,8 +5,8 @@ typedef struct {
     int size;
 } Stack;
 
-Stack *s_create(int size);
-void s_push(Stack *stack, void *item);
-void *s_pop(Stack *stack);
-void *s_top(Stack *stack);
-void s_free(Stack *stack);
+Stack *Stack_new(int size);
+void Stack_push(Stack *stack, void *item);
+void *Stack_pop(Stack *stack);
+void *Stack_top(Stack *stack);
+void Stack_free(Stack *stack);
