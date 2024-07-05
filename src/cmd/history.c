@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "history.h"
 #include "../global.h"
+#include "../commands.h"
 
 int history(char **argv) {
     int count = 0;

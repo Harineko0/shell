@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "../global.h"
+#include "../commands.h"
 
 int dirs(char **argv) {
     int count = 0;

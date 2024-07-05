@@ -3,18 +3,33 @@
 #include "../ast.h"
 #include "../lib/io.h"
 #include "../global.h"
+#include "../commands.h"
+#define MAX_ARG 256
 
 int CommandExpression_run(ExecuteExpression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
     Literal cmd = expr->command->run(expr->command);
-    debug("CommandExpression_run: command = %s", cmd);
+    debug("try to get runner");
+    Command_run runner = CommandMap_get(cmd);
+    debug("got runner %d", runner);
+
+    if (runner == NULL) {
+        return 1;
+    }
+
+    Literal args_buf[256], *b = args_buf;
 
     YieldExpression **args = expr->args;
     YieldExpression *arg;
 
     while ((arg = *args++) != NULL) {
-        debug("CommandExpression_run: args = %s", arg->run(arg));
+        *b++ = arg->run(arg);
     }
+
+    b = NULL;
+
+    runner(args_buf);
+//    debug("CommandExpression_run: command = %s", cmd);
 
     return 0;
 }

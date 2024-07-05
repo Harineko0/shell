@@ -1,5 +1,5 @@
 # Programming C Subset Shell
-## Available Commands
+## Available CommandMap
 ### 基本
 * 外部コマンド: execvp (p.46)
 * cd: directory.c (p.44)

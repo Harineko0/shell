@@ -1,1 +1,0 @@
-int pushd(char **argv);

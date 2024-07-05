@@ -1,4 +1,5 @@
 #include "global.h"
+#include "commands.h"
 
 char *cwd;
 Stack *dir_stack;
@@ -11,5 +12,6 @@ void init_global() {
 
     dir_stack = Stack_new(10);
     cmd_stack = Stack_new(32);
-    var_map = Map_new(100);
+    var_map = Map_new(32);
+    CommandMap_init(32);
 }

@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 #include "../global.h"
+#include "../commands.h"
 #include "../lib/io.h"
 #include "../lib/str.h"
 #include "../lib/path.h"

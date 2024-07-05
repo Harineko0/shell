@@ -1,8 +1,8 @@
 #include <string.h>
 #include "../global.h"
-#include "../cmd.h"
 #include "../lib/io.h"
 #include "../lib/str.h"
+#include "../commands.h"
 
 typedef unsigned long long ull;
 
@@ -45,6 +45,7 @@ int ex(char *cmd) {
     if (*arg != '\0') strcat(merged, arg);
     debug("%s", merged);
     
-    int result = c_execute(merged);
-    return result;
+//    int result = C(merged);
+//    return result;
+    return 0;
 }

@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include "cmd.h"
 #include "lib/io.h"
 #include "lib/map.h"
 #include "lib/str.h"
@@ -33,26 +31,6 @@ int main() {
 
         Program_run(prog);
 //        Program_free(prog);
-
-        continue;
-        ull len = strlen(buff);
-
-        if (len <= 1) {
-            continue;
-        }
-
-        if (strstart(buff, "exit")) {
-            break;
-        }
-
-        if (buff[len - 1] != '\n') {
-            error("Too long state (size: %d)", MAX_LEN);
-        }
-
-        char *newline = strchr(buff, '\n');
-        if (newline) *newline = '\0';
-
-        c_execute(buff);
     }
 
     return 0;
