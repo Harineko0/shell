@@ -39,10 +39,11 @@ Program *parser(Token *token) {
 }
 
 ExpressionStatement *parse_expr_state(Token **token) {
+    Token *t = *token;
     Token *next = (*token)->next;
     ExecuteExpression *expr;
 
-    if (next != NULL && next->type == EQUAL) {
+    if (t != NULL && t->type == LITERAL && next != NULL && next->type == EQUAL) {
         expr = (ExecuteExpression *) parse_assign_expr(token);
     } else {
         expr = (ExecuteExpression *) parse_cmd_expr(token);
@@ -52,16 +53,14 @@ ExpressionStatement *parse_expr_state(Token **token) {
 }
 
 CommandExpression *parse_cmd_expr(Token **token) {
-    Token *t = *token;
-//    if (t->string == NULL) {
-//        error("Token.string is NULL");
-//        exit(1);
-//    }
+    // parse command
     YieldExpression *cmd = parse_yield_expr(token);
 
+    // parse arguments
     YieldExpression *buf[MAX_ARG];
     int bufI = 0;
     while ((*token)->type != EOL) {
+        debug("%s", (*token)->string);
         if (bufI >= MAX_ARG) {
             error("Too many arguments. (max 64)\n");
             exit(1);
@@ -69,6 +68,7 @@ CommandExpression *parse_cmd_expr(Token **token) {
         buf[bufI++] = parse_yield_expr(token);
     }
 
+    // copy args to heap memory from buffer
     YieldExpression **args = calloc(bufI + 1, sizeof (YieldExpression *));
     YieldExpression **a = args, **b = buf;
 
@@ -82,10 +82,14 @@ CommandExpression *parse_cmd_expr(Token **token) {
 
 AssignExpression *parse_assign_expr(Token **token) {
     Token *first = *token;
+
+    if (first == NULL || first->type != LITERAL) {
+        error("Invalid token. Symbol to assign must start with literal.");
+    }
+
     Token *second = first->next;
-    if (second == NULL) {
-        error("parse_assign_expr(): second token is NULL");
-        exit(1);
+    if (second == NULL || second->type != EQUAL) {
+        error("Invalid token. (equal required)");
     }
     Token *third = second->next;
 
@@ -97,7 +101,7 @@ AssignExpression *parse_assign_expr(Token **token) {
 YieldExpression *parse_yield_expr(Token **token) {
     Token *t = *token;
 
-    if (t->type == LITERAL) {
+    if (t->type != DOLLAR) {
         *token = t->next;
         return (YieldExpression *) LiteralExpression_new(t->string);
     }
