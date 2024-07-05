@@ -106,19 +106,27 @@ $
     * Expression = command, var=, fn 
     * Statement = if, for, function
     * トップレベルシンボルの優先順位: function > alias > 内部 command > 外部 command
-```
+```yaml
 Program ::= Statement
-Statement ::= Statement Statement | <IfStatement | ForStatement | FunctionStatement | Expression> EOL
-IfStatement ::= 'if' Expression EOL 'then' Statement EOL
+Statement ::= Statement Statement | <IfStatement | ForStatement | FunctionStatement | ExpressionStatement> EOL
+IfStatement ::= 'if' ExecuteExpression EOL 'then' Statement EOL
   <'elif' Expression EOL 'then' Statement>*
   <'else' Statement>? 'fi'
 ForStatement ::= 'for' Literal 'in' LiteralExpression EOL 'do' Statement 'done'
 FunctionStatement ::= 'function' Literal '()' '{' Statement '}'
+ExpressionStatement ::= ExecuteExpression
+#CommandStatement ::= LiteralExpression+ | '[[' LiteralExpression+ ']]'
+#VariableStatement ::= Literal '=' LiteralExpression
 
-LiteralExpression ::= Literal+ | '`' Expression '`'
-Expression ::= CommandExpression | VariableExpression
-VariableExpression ::= Literal '=' VarLiteral
-CommandExpression ::= Literal Literal* | '[[' Literal+ ']]'
+YieldExpression ::= LiteralExpression | BackQuoteExpression | VariableExpression
+LiteralExpression ::= Literal
+BackQuoteExpression ::= '`' ExecuteExpression '`'
+VariableExpression ::= '$' Literal
+
+ExecuteExpression ::= CommandExpression | AssignExpression
+CommandExpression ::= YieldExpression+ | '[[' YieldExpression+ ']]'
+AssignExpression ::= Literal '=' YieldExpression
+
 // ↓ for test command
 ConditionalExpression ::= '(' ConditionalExpression ')' 
   | ConditionalExpression '&&' ConditionalExpression
@@ -129,7 +137,7 @@ ConditionalExpression ::= '(' ConditionalExpression ')'
   | <'-d' | '-e' | '-f' | '-L' | '-r' | '-s' | '-w' | '-x'> Literal
 
 EOL ::= ';' | '\n'
-VarLiteral ::= '$' Literal | Literal
+// VarLiteral ::= '$' Literal | Literal
 Literal ::= Literal Literal | <'a' | 'b' | ... | 'z' | '_'>
 
 Number ::= ZNumber | NNumber ZNumber+

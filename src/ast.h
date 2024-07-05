@@ -2,39 +2,79 @@
 #define AST_H
 
 typedef char * Literal;
+typedef struct execute_expression ExecuteExpression;
 
 typedef enum {
-    E_COMMAND,
-    E_VARIABLE,
-} ExpressionType;
+    YE_LITERAL,
+    YE_RUN,
+    YE_VARIABLE,
+} YieldExpressionType;
 
-typedef struct expression Expression;
-typedef int (*ExpressionRun)(Expression*);
-typedef void (*ExpressionFree)(Expression*);
-struct expression {
-    ExpressionType type;
-    ExpressionRun run;
-    ExpressionFree free;
+typedef struct yield_expression YieldExpression;
+typedef Literal (*YieldExpressionRun)(YieldExpression *);
+typedef void (*YieldExpressionFree)(YieldExpression *);
+struct yield_expression {
+    YieldExpressionType type;
+    YieldExpressionRun run;
+    YieldExpressionFree free;
 };
 
 typedef struct {
-    ExpressionType type;
-    ExpressionRun run;
-    ExpressionFree free;
+    YieldExpressionType type;
+    YieldExpressionRun run;
+    YieldExpressionFree free;
 
-    Literal command;
-    Literal *args;
+    Literal literal;
+} LiteralExpression;
+
+typedef struct {
+    YieldExpressionType type;
+    YieldExpressionRun run;
+    YieldExpressionFree free;
+
+    ExecuteExpression *expr;
+} RunExpression;
+
+typedef struct {
+    YieldExpressionType type;
+    YieldExpressionRun run;
+    YieldExpressionFree free;
+
+    Literal symbol;
+} VariableExpression;
+
+typedef enum {
+    EE_COMMAND,
+    EE_VARIABLE,
+} ExecuteExpressionType;
+
+typedef struct execute_expression ExecuteExpression;
+typedef int (*ExecuteExpressionRun)(ExecuteExpression*);
+typedef void (*ExecuteExpressionFree)(ExecuteExpression*);
+struct execute_expression {
+    ExecuteExpressionType type;
+    ExecuteExpressionRun run;
+    ExecuteExpressionFree free;
+};
+
+typedef struct {
+    ExecuteExpressionType type;
+    ExecuteExpressionRun run;
+    ExecuteExpressionFree free;
+
+    YieldExpression *command;
+    YieldExpression **args;
     // [[ xxx ]] の場合は command="test", args=xxx になる
 } CommandExpression;
 
 typedef struct {
-    ExpressionType type;
-    ExpressionRun run;
-    ExpressionFree free;
+    ExecuteExpressionType type;
+    ExecuteExpressionRun run;
+    ExecuteExpressionFree free;
 
     Literal symbol;
-    Literal value;
-} VariableExpression;
+    YieldExpression *value;
+} AssignExpression;
 
 typedef enum {
     S_IF,
@@ -59,7 +99,7 @@ typedef struct {
     StatementFree free;
     Statement *next;
 
-    Expression *expr;
+    ExecuteExpression *expr; // CommandExpression or VariableExpression
 } ExpressionStatement;
 
 typedef struct {
@@ -68,7 +108,7 @@ typedef struct {
     StatementFree free;
     Statement *next;
 
-    Expression *condition;
+    ExecuteExpression *condition;
     Statement *ifs; // if statement
     Statement *els; // else statement
 } IfStatement;
@@ -77,11 +117,12 @@ typedef struct {
     Statement *state;
 } Program;
 
+LiteralExpression *LiteralExpression_new(Literal literal);
 
-CommandExpression *CommandExpression_new(Literal cmd, Literal *args);
-VariableExpression *VariableExpression_new(Literal symbol, Literal value);
+CommandExpression *CommandExpression_new(YieldExpression *cmd, YieldExpression **args);
+AssignExpression *AssignExpression_new(Literal symbol, YieldExpression *value);
 
-ExpressionStatement *ExpressionStatement_new(Expression *expr);
+ExpressionStatement *ExpressionStatement_new(ExecuteExpression *expr);
 Statement *Statement_append(Statement *prev, Statement *new);
 
 Program *Program_new(Statement *state);
