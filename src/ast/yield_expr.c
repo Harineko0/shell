@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../ast.h"
 #include "../lib/io.h"
+#include "../global.h"
 
 Literal LiteralExpression_run(YieldExpression *expression) {
     LiteralExpression *expr = (LiteralExpression *)expression;
@@ -26,7 +27,10 @@ LiteralExpression *LiteralExpression_new(Literal literal) {
 
 Literal VariableExpression_run(YieldExpression *expression) {
     VariableExpression *expr = (VariableExpression *) expression;
-    return "some variable";
+    Literal value = Map_get(var_map, expr->symbol);
+
+    if (value == NULL) return "";
+    return value;
 }
 
 void VariableExpression_free(YieldExpression *expression) {

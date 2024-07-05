@@ -1,6 +1,8 @@
+#include <string.h>
 #include <stdlib.h>
 #include "../ast.h"
 #include "../lib/io.h"
+#include "../global.h"
 
 int CommandExpression_run(ExecuteExpression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
@@ -46,7 +48,9 @@ CommandExpression *CommandExpression_new(YieldExpression *cmd, YieldExpression *
 
 int AssignExpression_run(ExecuteExpression *expression) {
     AssignExpression *expr = (AssignExpression*) expression;
-    debug("AssignExpression_run: %s = %s", expr->symbol, expr->value->run(expr->value));
+    Literal key = expr->symbol;
+    Literal value = expr->value->run(expr->value);
+    Map_insert(var_map, key, strdup(value));
     return 0;
 }
 
