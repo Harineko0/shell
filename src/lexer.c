@@ -4,7 +4,7 @@
 #include "lexer.h"
 
 #define is_eol(c) (c == '\n' || c == ';')
-#define is_literal(c) ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_')
+#define is_literal(c) ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || c == '_' || c == '.' || c == '/')
 
 typedef unsigned long long ull;
 

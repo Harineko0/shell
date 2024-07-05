@@ -60,7 +60,6 @@ CommandExpression *parse_cmd_expr(Token **token) {
     YieldExpression *buf[MAX_ARG];
     int bufI = 0;
     while ((*token)->type != EOL) {
-        debug("%s", (*token)->string);
         if (bufI >= MAX_ARG) {
             error("Too many arguments. (max 64)\n");
             exit(1);
