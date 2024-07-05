@@ -28,9 +28,11 @@ int main() {
             debug("  token = %s", Token_to_string(t));
             t = t->next;
         }
-
         Program *prog = parser(token);
+        Token_free(token);
+
         Program_run(prog);
+        Program_free(prog);
 
         continue;
         ull len = strlen(buff);

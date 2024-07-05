@@ -79,6 +79,7 @@ typedef struct {
 
 
 CommandExpression *CommandExpression_new(Literal cmd, Literal *args);
+VariableExpression *VariableExpression_new(Literal symbol, Literal value);
 
 ExpressionStatement *ExpressionStatement_new(Expression *expr);
 Statement *Statement_append(Statement *prev, Statement *new);

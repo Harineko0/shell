@@ -117,7 +117,7 @@ FunctionStatement ::= 'function' Literal '()' '{' Statement '}'
 
 LiteralExpression ::= Literal+ | '`' Expression '`'
 Expression ::= CommandExpression | VariableExpression
-VariableExpression ::= Literal '=' Literal
+VariableExpression ::= Literal '=' VarLiteral
 CommandExpression ::= Literal Literal* | '[[' Literal+ ']]'
 // ↓ for test command
 ConditionalExpression ::= '(' ConditionalExpression ')' 

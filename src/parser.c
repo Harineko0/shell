@@ -26,6 +26,7 @@ Program *parser(Token *token) {
             t = t->next;
         }
 
+        // state が初期化前
         if (state == NULL) {
             state = s;
         }
@@ -49,7 +50,10 @@ ExpressionStatement *parse_expr_state(Token **token) {
 
 CommandExpression *parse_cmd_expr(Token **token) {
     Token *t = *token;
-    if (t->string == NULL) return NULL;
+    if (t->string == NULL) {
+        error("Token.string is NULL");
+        exit(1);
+    }
     Literal cmd = strdup(t->string);
     *token = t->next;
 
@@ -58,7 +62,7 @@ CommandExpression *parse_cmd_expr(Token **token) {
 
     while ((t = *token)->type == LITERAL) {
         if (bufI >= MAX_ARG) {
-            fputs("Too many arguments. (max 64)\n", stdout);
+            error("Too many arguments. (max 64)\n");
             exit(1);
         }
         buf[bufI++] = strdup(t->string);
@@ -79,5 +83,21 @@ CommandExpression *parse_cmd_expr(Token **token) {
 }
 
 VariableExpression *parse_var_expr(Token **token) {
+    Token *first = *token;
+    *token = (*token)->next;
+    Token *second = *token;
+    if (second == NULL) {
+        error("parse_var_expr(): second token is NULL");
+        exit(1);
+    }
+    *token = (*token)->next;
+    Token *third = *token;
+    *token = (*token)->next;
+
+    if (first->type == LITERAL && second->type == EQUAL && third->type == LITERAL) {
+        return VariableExpression_new(strdup(first->string), strdup(third->string));
+    }
+
+    fprintf(stderr, "Invalid token: %s=%s", first->string, third->string);
     return NULL;
 }

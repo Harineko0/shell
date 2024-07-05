@@ -4,12 +4,12 @@
 
 int CommandExpression_run(Expression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
-    debug("cmd: %s", expr->command);
+    debug("CommandExpression_run: command = %s", expr->command);
 
     if (expr->args != NULL) {
         Literal *arg = expr->args;
         while (*arg != NULL) {
-            debug("arg: %s", *arg++);
+            debug("CommandExpression_run: arg = %s", *arg++);
         }
     }
 
@@ -41,6 +41,30 @@ CommandExpression *CommandExpression_new(Literal cmd, Literal *args) {
     expr->free = CommandExpression_free;
     expr->command = cmd;
     expr->args = args;
+    return expr;
+}
+
+int VariableExpression_run(Expression *expression) {
+    VariableExpression *expr = (VariableExpression*) expression;
+    debug("VariableExpression_run: %s = %s", expr->symbol, expr->value);
+    return 0;
+}
+
+void VariableExpression_free(Expression *expression) {
+    VariableExpression *expr = (VariableExpression*) expression;
+
+    free(expr->symbol);
+    free(expr->value);
+    free(expr);
+}
+
+VariableExpression *VariableExpression_new(Literal symbol, Literal value) {
+    VariableExpression *expr = malloc(sizeof (VariableExpression));
+    expr->type = E_VARIABLE;
+    expr->run = VariableExpression_run;
+    expr->free = VariableExpression_free;
+    expr->symbol = symbol;
+    expr->value = value;
     return expr;
 }
 
