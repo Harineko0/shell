@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stdio.h>
 #include "lib/io.h"
 #include "lib/map.h"
@@ -20,6 +21,11 @@ int main() {
         fputs(">", stdout);
 
         fgets(buff, MAX_LEN, stdin);
+
+        ull len = strlen(buff);
+        buff[len - 1] = '\0';
+        Stack_push(cmd_stack, strdup(buff));
+        buff[len - 1] = '\n';
 
         Token *token = lexer(buff), *t = token;
         while (t != NULL) {

@@ -6,8 +6,7 @@ Stack *Stack_new(int size) {
     Stack *stack = malloc(sizeof (Stack));
 
     if (stack == NULL) {
-        error("Cannot create Stack");
-        return NULL;
+        error("Cannot instantiate Stack");
     }
 
     stack->top = 0;
@@ -18,31 +17,22 @@ Stack *Stack_new(int size) {
 }
 
 void Stack_push(Stack *stack, void *item) {
-    int top = stack->top;
+    int top = (stack->top + 1) % stack->size;
     stack->items[top] = item;
-    top++;
-
-    // 最大サイズまで格納したら古いものを上書き
-    if (top >= stack->size) {
-        top = 0;
-    }
-
     if (top <= stack->bottom) {
         stack->bottom++;
     }
-
     stack->top = top;
 }
 
 void *Stack_pop(Stack *stack) {
-    int index = stack->top;
-    void *item = stack->items[index];
-    stack->items[index] = NULL;
+    int top = stack->top;
 
-    if (index-- < 0) {
-        index = stack->size - 1;
-    }
-    stack->top = index;
+    if (top == stack->bottom) return NULL;
+
+    void *item = stack->items[top];
+    stack->items[top] = NULL;
+    stack->top = (top - 1) % stack->size;
 
     return item;
 }

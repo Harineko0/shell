@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "../ast.h"
 #include "../lib/io.h"
 #include "../global.h"
@@ -9,29 +10,26 @@
 int CommandExpression_run(ExecuteExpression *expression) {
     CommandExpression *expr = (CommandExpression*) expression;
     Literal cmd = expr->command->run(expr->command);
-    debug("try to get runner");
+
     Command_run runner = CommandMap_get(cmd);
-    debug("got runner %d", runner);
 
-    if (runner == NULL) {
-        return 1;
+    if (runner != NULL) {
+        Literal args_buf[256], *b = args_buf;
+
+        YieldExpression **args = expr->args;
+        YieldExpression *arg;
+
+        while ((arg = *args++) != NULL) {
+            *b++ = arg->run(arg);
+        }
+
+        b = NULL;
+
+        return runner(args_buf);
     }
 
-    Literal args_buf[256], *b = args_buf;
-
-    YieldExpression **args = expr->args;
-    YieldExpression *arg;
-
-    while ((arg = *args++) != NULL) {
-        *b++ = arg->run(arg);
-    }
-
-    b = NULL;
-
-    runner(args_buf);
-//    debug("CommandExpression_run: command = %s", cmd);
-
-    return 0;
+    fprintf(stderr, "shell: %s: command not found\n", cmd);
+    return 1;
 }
 
 void CommandExpression_free(ExecuteExpression *expression) {
