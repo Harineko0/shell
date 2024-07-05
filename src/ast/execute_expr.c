@@ -46,7 +46,11 @@ CommandExpression *CommandExpression_new(YieldExpression *cmd, YieldExpression *
 
 int AssignExpression_run(ExecuteExpression *expression) {
     AssignExpression *expr = (AssignExpression*) expression;
-    debug("AssignExpression_run: %s = %s", expr->symbol, expr->value->run(expr->value));
+    debug("AssignExpression_run: %d", expr);
+    debug("                    : %d", expr->type);
+    debug("                    : %s", expr->symbol);
+    debug("                    : %d", expr->value);
+    debug("                    : %s", expr->value->run(expr->value));
     return 0;
 }
 

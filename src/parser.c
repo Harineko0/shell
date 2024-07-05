@@ -80,21 +80,20 @@ CommandExpression *parse_cmd_expr(Token **token) {
 
 AssignExpression *parse_assign_expr(Token **token) {
     Token *first = *token;
-    *token = (*token)->next;
-    Token *second = *token;
+    Token *second = first->next;
     if (second == NULL) {
         error("parse_assign_expr(): second token is NULL");
         exit(1);
     }
-    *token = (*token)->next;
-    Token *third = *token;
-    *token = (*token)->next;
+    Token *third = second->next;
 
     if (first->type == LITERAL && second->type == EQUAL && third->type == LITERAL) {
-        YieldExpression *value = parse_yield_expr(token);
+        YieldExpression *value = parse_yield_expr(&third);
+        *token = third;
         return AssignExpression_new(strdup(first->string), value);
     }
 
+    *token = third;
     fprintf(stderr, "Invalid token: %s=%s", first->string, third->string);
     return NULL;
 }

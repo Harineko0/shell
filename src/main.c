@@ -32,7 +32,7 @@ int main() {
         Token_free(token);
 
         Program_run(prog);
-        Program_free(prog);
+//        Program_free(prog);
 
         continue;
         ull len = strlen(buff);
