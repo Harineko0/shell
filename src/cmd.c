@@ -17,16 +17,16 @@
 
 typedef unsigned long long ull;
 
-static HashMap *map = NULL;
+static Map *map = NULL;
 
 void init_map() {
-    map = h_create(CMD_SIZE);
+    map = Map_new(CMD_SIZE);
 
-    h_insert(map, "cd", cd);
-    h_insert(map, "pushd", pushd);
-    h_insert(map, "dirs", dirs);
-    h_insert(map, "popd", popd);
-    h_insert(map, "history", history);
+    Map_insert(map, "cd", cd);
+    Map_insert(map, "pushd", pushd);
+    Map_insert(map, "dirs", dirs);
+    Map_insert(map, "popd", popd);
+    Map_insert(map, "history", history);
 }
 
 int c_execute(char *cmd) {
@@ -51,7 +51,7 @@ c_fun c_get(char *cmd) {
         init_map();
     }
 
-    return h_get(map, cmd);
+    return Map_get(map, cmd);
 }
 
 Command c_interprete(char *input, int argc) {

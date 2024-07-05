@@ -11,10 +11,10 @@ struct Entry {
 typedef struct {
     Entry **entries;
     int size;
-} HashMap;
+} Map;
 
-HashMap *h_create(int size);
-void h_insert(const HashMap *map, const char *key, void *value);
-void *h_get(const HashMap *map, const char *key);
-int h_delete(const HashMap *map, const char *key, bool free_val);
-void h_free(HashMap *map, bool free_val);
+Map *Map_new(int size);
+void Map_insert(const Map *map, const char *key, void *value);
+void *Map_get(const Map *map, const char *key);
+int Map_delete(const Map *map, const char *key, bool free_val);
+void Map_free(Map *map, bool free_val);

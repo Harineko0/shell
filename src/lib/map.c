@@ -5,8 +5,8 @@
 
 typedef unsigned int uint;
 
-HashMap *h_create(int size) {
-    HashMap *hashmap = malloc(sizeof(HashMap));
+Map *Map_new(int size) {
+    Map *hashmap = malloc(sizeof(Map));
     hashmap->size = size;
 
     hashmap->entries = malloc(sizeof(Entry) * size);
@@ -28,7 +28,7 @@ uint hash(const char *key, const int size) {
     return hash % size;
 }
 
-void h_insert(const HashMap *map, const char *key, void *value) {
+void Map_insert(const Map *map, const char *key, void *value) {
     uint index = hash(key, map->size);
 
     Entry *entry = map->entries[index];
@@ -54,7 +54,7 @@ void h_insert(const HashMap *map, const char *key, void *value) {
     map->entries[index] = entry;
 }
 
-void *h_get(const HashMap *map, const char *key) {
+void *Map_get(const Map *map, const char *key) {
     uint index = hash(key, map->size);
 
     Entry *entry = map->entries[index];
@@ -68,7 +68,7 @@ void *h_get(const HashMap *map, const char *key) {
     return entry->value;
 }
 
-int h_delete(const HashMap *map, const char *key, bool free_val) {
+int Map_delete(const Map *map, const char *key, bool free_val) {
     uint index = hash(key, map->size);
     Entry *entry = map->entries[index];
 
@@ -95,7 +95,7 @@ int h_delete(const HashMap *map, const char *key, bool free_val) {
     return 0;
 }
 
-void h_free(HashMap *map, bool free_val) {
+void Map_free(Map *map, bool free_val) {
     // free entries
     int i = 0;
 
